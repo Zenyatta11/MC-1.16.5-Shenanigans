@@ -1,20 +1,17 @@
-package com.batatas.mate;
+package com.batatas.shenanigans;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.GrassBlock;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.Explosion.Mode;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -31,11 +28,11 @@ import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("mate")
-public class Mate {
+public class Shenanigans {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public Mate() {
+    public Shenanigans() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -100,7 +97,7 @@ public class Mate {
         BlockState state = world.getBlockState(playerLocation);
         Block block = state.getBlock();
 
-        if (block instanceof GrassBlock) {
+        if (!world.isClientSide && block instanceof GrassBlock && !((PlayerEntity) player).isCreative()) {
             world.explode(null, playerPosition.x, playerPosition.y, playerPosition.z, (float)3.0, true, Mode.BREAK);
         }
     }
